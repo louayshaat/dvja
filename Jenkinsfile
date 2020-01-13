@@ -17,6 +17,11 @@ pipeline {
         dependencyCheck additionalArguments: '', odcInstallation: 'Dependency-Check'
         dependencyCheckPublisher failedTotalCritical: 1, failedTotalHigh: 1, failedTotalLow: 10, failedTotalMedium: 5, pattern: '', unstableTotalCritical: 1, unstableTotalHigh: 1, unstableTotalLow: 10, unstableTotalMedium: 5
     }
+    stage('Scan for vulnerabilities') {
+      steps {
+          sh 'java -jar dvja-*.war && zap-cli quick-scan --self-contained --spider -r http://127.0.0.1 && zap-cli report -o zap-report.html -f html'
+      }
+      }
     }
     stage('Publish to S3') {
       steps {
